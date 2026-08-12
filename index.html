@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Purchase Report — Auro Sundram Foods</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7a1220">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Purchase Report">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -4632,6 +4638,13 @@ function runInit(){
   syncHdr();
 }
 // App no longer auto-starts on DOMContentLoaded — it waits for cloud login (see cloudLogin()).
+
+// Register service worker so the app becomes installable (PWA)
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('service-worker.js').catch(function(e){ console.log('SW register failed', e); });
+  });
+}
 
 // ═══════════════════════════════════════
 //  COLUMN RESIZE
