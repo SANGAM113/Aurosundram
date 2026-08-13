@@ -4569,12 +4569,14 @@ function openCloudHistory(){
   var modal = document.createElement('div');
   modal.id = 'cloudHistoryModal';
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99998;display:flex;align-items:center;justify-content:center';
-  modal.innerHTML = '<div style="background:#fff;border-radius:12px;padding:22px;width:480px;max-width:92vw;max-height:80vh;overflow:auto">'
-    + '<h3 style="margin:0 0 14px">📜 Save History</h3>'
+  modal.innerHTML = '<div style="background:#fff;border-radius:12px;padding:22px;width:480px;max-width:92vw;max-height:80vh;overflow:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.35)">'
+    + '<button onclick="document.getElementById(\'cloudHistoryModal\').remove()" style="position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:1px solid #cbd5e1;background:#f8fafc;color:#334155;font-size:16px;font-weight:700;cursor:pointer;line-height:1">✕</button>'
+    + '<h3 style="margin:0 0 14px;color:#0b1f3a">📜 Save History</h3>'
     + '<div id="cloudHistoryList">Loading...</div>'
-    + '<button class="btn btn-nav btn-sm" style="margin-top:14px" onclick="document.getElementById(\'cloudHistoryModal\').remove()">Close</button>'
+    + '<button onclick="document.getElementById(\'cloudHistoryModal\').remove()" style="margin-top:16px;padding:8px 16px;background:#0b1f3a;color:#fff;border:none;border-radius:7px;font-weight:600;font-size:13px;cursor:pointer">Close</button>'
     + '</div>';
   document.body.appendChild(modal);
+  modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
 
   fetch(_cloudUrl(), { method:'POST', body: JSON.stringify({action:'getHistory'}) })
     .then(function(r){ return r.json(); })
@@ -4584,9 +4586,9 @@ function openCloudHistory(){
       var html = '';
       res.history.forEach(function(h){
         var when = h.timestamp ? new Date(h.timestamp).toLocaleString() : '';
-        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee">'
-          + '<div><b>v'+h.version+'</b> — '+when+'<br><span style="color:#667;font-size:12px">by '+(h.savedBy||'unknown')+'</span></div>'
-          + (CLOUD.role==='entry' ? '<button class="btn btn-nav btn-sm" onclick="restoreCloudVersion('+h.version+')">Restore</button>' : '')
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;gap:10px">'
+          + '<div style="color:#0b1f3a"><b>v'+h.version+'</b> — '+when+'<br><span style="color:#667;font-size:12px">by '+(h.savedBy||'unknown')+'</span></div>'
+          + (CLOUD.role==='entry' ? '<button onclick="restoreCloudVersion('+h.version+')" style="flex-shrink:0;padding:6px 12px;background:#fff;color:#0b1f3a;border:1.5px solid #0b1f3a;border-radius:6px;font-weight:600;font-size:12.5px;cursor:pointer">Restore</button>' : '')
           + '</div>';
       });
       list.innerHTML = html;
